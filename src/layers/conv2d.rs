@@ -109,7 +109,7 @@ impl<F: PrimeField> Conv2DChip<F> {
     padding: PaddingEnum,
   ) -> (usize, usize) {
     /*
-    println!(
+    info!(
       "H: {}, W: {}, SI: {}, SJ: {}, CH: {}, CW: {}",
       h, w, si, sj, ch, cw
     );
@@ -158,7 +158,7 @@ impl<F: PrimeField> Conv2DChip<F> {
     } else {
       ((0, 0), (0, 0))
     };
-    // println!("Padding: {:?}", (ph, pw));
+    // info!("Padding: {:?}", (ph, pw));
     let padding = vec![[0, 0], [ph.0, ph.1], [pw.0, pw.1], [0, 0]];
 
     let inp_pad = pad(&inp, padding, &zero);
@@ -368,7 +368,7 @@ impl<F: PrimeField> Layer<F> for Conv2DChip<F> {
             .unwrap();
           outp_flat.push(outp[0].clone());
         }
-        // println!("outp_flat: {:?}", outp_flat.len());
+        // info!("outp_flat: {:?}", outp_flat.len());
 
         outp_flat
       }

@@ -185,10 +185,10 @@ impl<F: PrimeField> Gadget<F> for BiasDivFloorRelu6Chip<F> {
       let div_mod_res = inp_f.map(|x: F| {
         let x_pos = x + div_inp_min_val_pos;
         let inp = convert_to_u64(&x_pos);
-        // println!("inp: {:?}, bias: {:?}, x_pos: {:?}", inp, bias, x_pos);
+        // info!("inp: {:?}, bias: {:?}, x_pos: {:?}", inp, bias, x_pos);
         let div_res = inp as i64 / div_val - (div_inp_min_val_pos_i64 / div_val);
         let mod_res = inp as i64 % div_val;
-        // println!("div_res: {:?}, mod_res: {:?}", div_res, mod_res);
+        // info!("div_res: {:?}, mod_res: {:?}", div_res, mod_res);
         (div_res, mod_res)
       });
       let div_res = div_mod_res.map(|x: (i64, i64)| x.0) + bias_f;
@@ -197,11 +197,11 @@ impl<F: PrimeField> Gadget<F> for BiasDivFloorRelu6Chip<F> {
       let outp = div_res.map(|x: i64| {
         let mut x_pos = x - div_outp_min_val_i64;
         if !relu_map.contains_key(&(x_pos)) {
-          println!("x: {}, x_pos: {}", x, x_pos);
+          info!("x: {}, x_pos: {}", x, x_pos);
           x_pos = 0;
         }
         let outp_val = relu_map.get(&(x_pos)).unwrap();
-        // println!("x: {}, x_pos: {}, outp_val: {}", x, x_pos, outp_val);
+        // info!("x: {}, x_pos: {}, outp_val: {}", x, x_pos, outp_val);
         F::from(*outp_val as u64)
       });
 

@@ -35,7 +35,7 @@ pub fn convert_pos_int<F: PrimeField>(x: Value<F>) -> i128 {
 pub fn print_pos_int<F: PrimeField>(prefix: &str, x: Value<F>, scale_factor: u64) {
   let tmp = convert_pos_int(x);
   let tmp_float = tmp as f64 / scale_factor as f64;
-  println!("{} x: {} ({})", prefix, tmp, tmp_float);
+  info!("{} x: {} ({})", prefix, tmp, tmp_float);
 }
 
 pub fn print_assigned_arr<F: PrimeField>(
@@ -127,10 +127,10 @@ pub fn broadcast<G: Clone>(
   let tmp1 = tmp1.broadcast(s.clone()).unwrap().into_owned();
   let tmp1 = tmp1.broadcast(final_shape.as_slice()).unwrap().into_owned();
   let tmp2 = tmp2.broadcast(final_shape.as_slice()).unwrap().into_owned();
-  // println!("x1: {:?} x2: {:?}", x1.shape(), x2.shape());
-  // println!("s1: {:?} s2: {:?} s: {:?}", s1, s2, s);
-  // println!("tmp1 shape: {:?}", tmp1.shape());
-  // println!("tmp2 shape: {:?}", tmp2.shape());
+  // info!("x1: {:?} x2: {:?}", x1.shape(), x2.shape());
+  // info!("s1: {:?} s2: {:?} s: {:?}", s1, s2, s);
+  // info!("tmp1 shape: {:?}", tmp1.shape());
+  // info!("tmp2 shape: {:?}", tmp2.shape());
 
   if x1.ndim() < x2.ndim() {
     return (tmp1, tmp2);

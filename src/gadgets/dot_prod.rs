@@ -186,7 +186,7 @@ impl<F: PrimeField> Gadget<F> for DotProductChip<F> {
             let weights =
               weights[i * self.num_inputs_per_row()..(i + 1) * self.num_inputs_per_row()].to_vec();
             let res = self
-              .op_row_region(&mut region, i, &vec![inp, weights], &vec![zero.clone()])
+              .op_row_region(&mut region, i, &vec![inp, weights], &vec![zero])
               .unwrap();
             outputs.push(res[0].clone());
           }

@@ -5,3 +5,6 @@ pub mod gadgets;
 pub mod layers;
 pub mod model;
 pub mod utils;
+
+#[macro_use]
+extern crate log;

@@ -78,7 +78,7 @@ impl<F: PrimeField + Ord> DAGLayerChip<F> {
       let layer_type = &layer_config.layer_type;
       let inp_idxes = &self.dag_config.inp_idxes[layer_idx];
       let out_idxes = &self.dag_config.out_idxes[layer_idx];
-      println!(
+      info!(
         "Processing layer {}, type: {:?}, inp_idxes: {:?}, out_idxes: {:?}, layer_params: {:?}",
         layer_idx, layer_type, inp_idxes, out_idxes, layer_config.layer_params
       );
@@ -429,10 +429,9 @@ impl<F: PrimeField + Ord> DAGLayerChip<F> {
       };
 
       for (idx, tensor_idx) in out_idxes.iter().enumerate() {
-        println!("Out {} shape: {:?}", idx, out[idx].shape());
+        info!("Out {} shape: {:?}", idx, out[idx].shape());
         tensor_map.insert(*tensor_idx, out[idx].clone());
       }
-      println!();
     }
 
     let mut final_out = vec![];
@@ -450,7 +449,7 @@ impl<F: PrimeField + Ord> DAGLayerChip<F> {
 
     let tmp = print_arr.iter().map(|x| x.as_ref()).collect::<Vec<_>>();
     print_assigned_arr("final out", &tmp.to_vec(), gadget_config.scale_factor);
-    println!("final out idxes: {:?}", self.dag_config.final_out_idxes);
+    info!("final out idxes: {:?}", self.dag_config.final_out_idxes);
 
     let mut x = vec![];
     for cell in print_arr.iter() {

@@ -56,21 +56,21 @@ pub fn time_circuit_ipa(circuit: ModelCircuit<Fp>) {
   let params = get_ipa_params("./params_ipa", degree);
 
   let circuit_duration = start.elapsed();
-  println!(
+  info!(
     "Time elapsed in params construction: {:?}",
     circuit_duration
   );
 
   let vk = keygen_vk(&params, &empty_circuit).unwrap();
   let vk_duration = start.elapsed();
-  println!(
+  info!(
     "Time elapsed in generating vkey: {:?}",
     vk_duration - circuit_duration
   );
 
   let pk = keygen_pk(&params, vk, &empty_circuit).unwrap();
   let pk_duration = start.elapsed();
-  println!(
+  info!(
     "Time elapsed in generating pkey: {:?}",
     pk_duration - vk_duration
   );
@@ -79,7 +79,7 @@ pub fn time_circuit_ipa(circuit: ModelCircuit<Fp>) {
   let fill_duration = start.elapsed();
   let _prover = MockProver::run(degree, &proof_circuit, vec![vec![]]).unwrap();
   let public_vals = get_public_values();
-  println!(
+  info!(
     "Time elapsed in filling circuit: {:?}",
     fill_duration - pk_duration
   );
@@ -96,7 +96,7 @@ pub fn time_circuit_ipa(circuit: ModelCircuit<Fp>) {
   .unwrap();
   let proof = transcript.finalize();
   let proof_duration = start.elapsed();
-  println!("Proving time: {:?}", proof_duration - fill_duration);
+  info!("Proving time: {:?}", proof_duration - fill_duration);
 
   let proof_size = {
     let mut folder = std::path::PathBuf::new();
@@ -106,7 +106,7 @@ pub fn time_circuit_ipa(circuit: ModelCircuit<Fp>) {
     fd.write_all(&proof).unwrap();
     fd.metadata().unwrap().len()
   };
-  println!("Proof size: {} bytes", proof_size);
+  info!("Proof size: {} bytes", proof_size);
 
   let strategy = SingleStrategy::new(&params);
   let mut transcript = Blake2bRead::<_, _, Challenge255<_>>::init(&proof[..]);
@@ -122,5 +122,5 @@ pub fn time_circuit_ipa(circuit: ModelCircuit<Fp>) {
     "proof did not verify"
   );
   let verify_duration = start.elapsed();
-  println!("Verifying time: {:?}", verify_duration - proof_duration);
+  info!("Verifying time: {:?}", verify_duration - proof_duration);
 }

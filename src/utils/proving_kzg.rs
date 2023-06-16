@@ -79,7 +79,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   let params = get_kzg_params("./params_kzg", degree);
 
   let circuit_duration = start.elapsed();
-  println!(
+  info!(
     "Time elapsed in params construction: {:?}",
     circuit_duration
   );
@@ -88,31 +88,31 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   let vk = keygen_vk(&params, &vk_circuit).unwrap();
   drop(vk_circuit);
   let vk_duration = start.elapsed();
-  println!(
+  info!(
     "Time elapsed in generating vkey: {:?}",
     vk_duration - circuit_duration
   );
 
   let vkey_size = serialize(&vk.to_bytes(SerdeFormat::RawBytes), "vkey");
-  println!("vkey size: {} bytes", vkey_size);
+  info!("vkey size: {} bytes", vkey_size);
 
   let pk_circuit = circuit.clone();
   let pk = keygen_pk(&params, vk, &pk_circuit).unwrap();
   let pk_duration = start.elapsed();
-  println!(
+  info!(
     "Time elapsed in generating pkey: {:?}",
     pk_duration - vk_duration
   );
   drop(pk_circuit);
 
   let pkey_size = serialize(&pk.to_bytes(SerdeFormat::RawBytes), "pkey");
-  println!("pkey size: {} bytes", pkey_size);
+  info!("pkey size: {} bytes", pkey_size);
 
   let fill_duration = start.elapsed();
   let proof_circuit = circuit.clone();
   let _prover = MockProver::run(degree, &proof_circuit, vec![vec![]]).unwrap();
   let public_vals = get_public_values();
-  println!(
+  info!(
     "Time elapsed in filling circuit: {:?}",
     fill_duration - pk_duration
   );
@@ -124,7 +124,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
     .flatten()
     .collect();
   let public_vals_u8_size = serialize(&public_vals_u8, "public_vals");
-  println!("Public vals size: {} bytes", public_vals_u8_size);
+  info!("Public vals size: {} bytes", public_vals_u8_size);
 
   let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
   create_proof::<
@@ -145,17 +145,17 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   .unwrap();
   let proof = transcript.finalize();
   let proof_duration = start.elapsed();
-  println!("Proving time: {:?}", proof_duration - fill_duration);
+  info!("Proving time: {:?}", proof_duration - fill_duration);
 
   let proof_size = serialize(&proof, "proof");
   let proof = std::fs::read("proof").unwrap();
 
-  println!("Proof size: {} bytes", proof_size);
+  info!("Proof size: {} bytes", proof_size);
 
   let strategy = SingleStrategy::new(&params);
   let transcript_read = Blake2bRead::<_, _, Challenge255<_>>::init(&proof[..]);
 
-  println!("public vals: {:?}", public_vals);
+  info!("public vals: {:?}", public_vals);
   verify_kzg(
     &params,
     &pk.get_vk(),
@@ -164,7 +164,7 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
     transcript_read,
   );
   let verify_duration = start.elapsed();
-  println!("Verifying time: {:?}", verify_duration - proof_duration);
+  info!("Verifying time: {:?}", verify_duration - proof_duration);
 }
 
 // Standalone verification
@@ -176,7 +176,7 @@ pub fn verify_circuit_kzg(
 ) {
   let degree = circuit.k as u32;
   let params = get_kzg_params("./params_kzg", degree);
-  println!("Loaded the parameters");
+  info!("Loaded the parameters");
 
   let vk = VerifyingKey::read::<BufReader<File>, ModelCircuit<Fr>>(
     &mut BufReader::new(File::open(vkey_fname).unwrap()),
@@ -184,7 +184,7 @@ pub fn verify_circuit_kzg(
     (),
   )
   .unwrap();
-  println!("Loaded vkey");
+  info!("Loaded vkey");
 
   let proof = std::fs::read(proof_fname).unwrap();
 
@@ -201,6 +201,6 @@ pub fn verify_circuit_kzg(
   let verify_start = start.elapsed();
   verify_kzg(&params, &vk, strategy, &public_vals, transcript);
   let verify_duration = start.elapsed();
-  println!("Verifying time: {:?}", verify_duration - verify_start);
-  println!("Proof verified!")
+  info!("Verifying time: {:?}", verify_duration - verify_start);
+  info!("Proof verified!")
 }

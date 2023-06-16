@@ -21,3 +21,9 @@ params_ipa
 examples
 testing/data
 *.diff
+
+pkey
+proof
+public_vals
+temp/
+vkey
