@@ -1,0 +1,3 @@
+[submodule "circuit_docker_build"]
+	path = circuit_docker_build
+	url = git@github.com:dompute/circuit_docker_build.git
