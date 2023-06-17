@@ -82,10 +82,16 @@ impl CliOperator<CliArgs, CliArgs> for Operator {
   fn verify_proof(
     &self,
     args: CliArgs,
-    params_reader: BufReader<File>,
+    params_reader: Option<BufReader<File>>,
     proof: &[u8],
   ) -> circuit_cli::Result<bool> {
-    self.verify_ml_proof(args, params_reader, proof)
+    self.verify_ml_proof(
+      args,
+      params_reader.ok_or(circuit_cli::Error::CliLogicError(
+        "params reader is none".to_string(),
+      ))?,
+      proof,
+    )
   }
 }
 
