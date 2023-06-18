@@ -60,12 +60,12 @@ impl CliArgs {
       .config_fname
       .as_ref()
       .map(|s| s.as_str())
-      .unwrap_or("/dompute/data/model.msgpack");
+      .unwrap_or("/data/model.msgpack");
     let inp_fname = self
       .inp_fname
       .as_ref()
       .map(|s| s.as_str())
-      .unwrap_or("/dompute/data/inp.msgpack");
+      .unwrap_or("/data/inp.msgpack");
     ModelCircuit::<Fr>::generate_from_file(&config_fname, &inp_fname)
   }
 }
