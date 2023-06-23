@@ -48,8 +48,6 @@ struct MlParamsSerde {
 }
 
 fn main() -> Result<()> {
-  env_logger::init();
-
   circuit_cli::run(Operator)?;
   Ok(())
 }
